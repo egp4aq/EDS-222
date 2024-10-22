@@ -1,0 +1,42 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+penguins <- palmerpenguins::penguins
+```
+
+Use palmer penguins to fit a model that has an interaction between a continuous and categorical variable
+
+```{r}
+body_flipper_sex <- summary(lm(bill_length_mm ~ body_mass_g + sex + body_mass_g : sex, penguins))
+ggplot(penguins, aes(flipper_length_mm, body_mass_g, color = sex)) +
+  geom_point() +
+  geom_abline(intercept = -5443.9607, slope = 47.1527, color = "red") +
+  geom_abline(intercept = -5443.9607 + 406.8015,
+              slope = 47.1527 + -0.2942,
+              color = "blue")
+# here, beta 3 is the number that is shifting whether or not the lines are parallel
+```
+
+Use palmer penguins to fit a model that has an interaction between two continuous variables
+
+```{r}
+summary(lm(bill_length_mm ~ body_mass_g + species + body_mass_g : bill_length_mm, penguins))
+```
+
+Interpret the coefficients
+
+body_mass = B0 + B1 * flipper + B2 * sex=male + B3 * flipper * sex=male
+
+if female: body_mass = B0 + B1 * flipper
+if male: body_mass = B0 + (B1 + B3) * flipper
+
